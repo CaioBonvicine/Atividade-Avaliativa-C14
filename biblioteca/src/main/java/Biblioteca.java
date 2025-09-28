@@ -14,10 +14,12 @@ public class Biblioteca {
     }
 
     public Livro buscarLivro(String titulo) {
-        return livros.stream()
-                .filter(l -> l.getTitulo().equalsIgnoreCase(titulo))
-                .findFirst()
-                .orElse(null);
+        for (Livro livro : livros) {
+            if (livro.getTitulo().equalsIgnoreCase(titulo)) {
+                return livro;
+            }
+        }
+        return null;
     }
 
     public void emprestarLivro(Usuario usuario, String titulo) {
