@@ -63,11 +63,13 @@ jobs:
         path: biblioteca/target/site/
 
   notification:
-    needs: test
+    needs: build
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
     - name: Notification
+      env:
+        EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
       run: sh scripts/sendEmail.sh
