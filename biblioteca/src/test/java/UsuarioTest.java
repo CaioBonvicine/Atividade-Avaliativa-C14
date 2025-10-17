@@ -24,8 +24,7 @@ class UsuarioTest {
         usuario.emprestarLivro(new Livro("L2", "A"));
         usuario.emprestarLivro(new Livro("L3", "A"));
 
-        assertThrows(IllegalStateException.class, () ->
-                usuario.emprestarLivro(new Livro("L4", "A")));
+        assertThrows(IllegalStateException.class, () -> usuario.emprestarLivro(new Livro("L4", "A")));
     }
 
     @Test
@@ -62,7 +61,51 @@ class UsuarioTest {
 
         usuario.emprestarLivro(livro);
 
-        assertThrows(IllegalStateException.class, () ->
-                u2.emprestarLivro(livro));
+        assertThrows(IllegalStateException.class, () -> u2.emprestarLivro(livro));
     }
+
+    @Test
+    void naoPermitirEmprestarMesmoLivroDuasVezes() {
+        usuario.emprestarLivro(livro);
+        assertThrows(IllegalStateException.class, () -> usuario.emprestarLivro(livro));
+    }
+
+    @Test
+    void nomeDoUsuarioEhRetornadoCorretamente() {
+        assertEquals("Caio", usuario.getNome());
+    }
+
+    @Test
+    void naoPermitirEmprestarLivroNulo() {
+        assertThrows(NullPointerException.class, () -> usuario.emprestarLivro(null));
+    }
+
+    @Test
+    void naoPermitirDevolverLivroNulo() {
+        assertThrows(NullPointerException.class, () -> usuario.devolverLivro(null));
+    }
+
+    @Test
+    void listaInicialDeLivrosEmprestadosEstaVazia() {
+        assertTrue(usuario.getLivrosEmprestados().isEmpty());
+    }
+
+    @Test
+    void emprestarELiberarLivroReutilizacao() {
+        usuario.emprestarLivro(livro);
+        usuario.devolverLivro(livro);
+
+        Usuario outroUsuario = new Usuario("Pedro");
+        assertDoesNotThrow(() -> outroUsuario.emprestarLivro(livro));
+    }
+
+    @Test
+    void emprestarTresLivrosDiferentesNaoLancaErro() {
+        assertDoesNotThrow(() -> {
+            usuario.emprestarLivro(new Livro("A", "X"));
+            usuario.emprestarLivro(new Livro("B", "Y"));
+            usuario.emprestarLivro(new Livro("C", "Z"));
+        });
+    }
+
 }
